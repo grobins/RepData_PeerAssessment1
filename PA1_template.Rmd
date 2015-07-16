@@ -9,7 +9,7 @@ keep_md: true
 
 ## Loading and preprocessing the data
 
-```{r}
+```{r echo=TRUE}
 require(dplyr)
 require(ggplot2)
 require(ggthemes)
@@ -30,8 +30,7 @@ dat$date <- as.Date(dat$date)
 ## What is mean total number of steps taken per day?
 
 There are a mean of `r dat %>% group_by(date) %>% summarise(dailysteps = sum(steps, na.rm=T)) %>% summarise(mean = round(mean(dailysteps, na.rm=T),1)) ` steps taken each day
-```{r}
-
+```{r echo=TRUE}
 dat %>% group_by(date) %>% 
   summarise(dailysteps = sum(steps, na.rm=T)) %>% 
   ggplot(aes(dailysteps)) + geom_histogram(binwidth = 500) + 
@@ -51,8 +50,7 @@ dat %>% group_by(date) %>%
 
 Below is a plot of the average daily pattern across `r length(unique(dat$date))` days.  The 5-min interval labelled 
 
-```{r}
-
+```{r echo=TRUE}
 dat %>% group_by(interval) %>% summarise(avgSteps = mean(steps, na.rm=T)) %>% 
   ggplot(aes(interval, avgSteps)) + geom_line() + ggtitle('Trend of step count for 5min intervals through an average day') + 
   xlab('5-min Interval During Day') + ylab('Step Count')
@@ -61,7 +59,7 @@ dat %>% group_by(interval) %>% summarise(avgSteps = mean(steps, na.rm=T)) %>%
 
 The 5-min interval labelled `r dat %>% group_by(interval) %>% summarise(avgSteps = mean(steps, na.rm=T)) %>% arrange(desc(avgSteps)) %>% top_n(1) %>% select(interval)` has the highest step count during the average day.
 
-```{r}
+```{r echo=TRUE}
 dat %>% group_by(interval) %>% summarise(avgSteps = mean(steps, na.rm=T)) %>% arrange(desc(avgSteps)) %>% top_n(1)
 ```
 
@@ -72,8 +70,7 @@ dat %>% group_by(interval) %>% summarise(avgSteps = mean(steps, na.rm=T)) %>% ar
 
 There are `r nrow(dat) - nrow(na.omit(dat))` rows with missing data in the dataset.  The missing data was imputed by using the average interval step count.  As a result the mean and median step count by day has increased, and are now identical.
 
-```{r}
-
+```{r echo=TRUE}
 dat_imp <- dat
 nas <- is.na(dat_imp$steps)
 avg_interval <- tapply(dat_imp$steps, dat_imp$interval, mean, na.rm=TRUE, simplify=TRUE)
@@ -102,7 +99,7 @@ dat_imp %>% group_by(date) %>%
 ## Are there differences in activity patterns between weekdays and weekends?
 
 
-```{r}
+```{r echo=TRUE}
 dat_imp$dow <- ifelse(wday(dat_imp[,'date']) %in% c(6, 7),'Weekend', 'Weekday')
 dat_imp$dow <- as.factor(dat_imp$dow)
 
